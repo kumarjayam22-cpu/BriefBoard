@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BriefBoard</title>
+  <link rel="stylesheet" href="src/popup/popup.css">
+</head>
+<body class="size-normal" data-theme="light" data-corners="rounded">
+  <div class="container">
+    <header>
+      <h2>BriefBoard</h2>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="summary">⚡ Actions</button>
+      <button class="tab-btn" data-tab="chat">💬 Chat</button>
+      <button class="tab-btn" data-tab="notes">📝 Notes</button>
+      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+    </div>
+
+    <div class="content-area">
+      <!-- Actions Tab (Formerly Summary) -->
+      <div id="tab-summary" class="tab-content active">
+        <div class="card">
+
+          <!-- Use Case Grid Container -->
+          <div id="use-case-container" style="display: flex; flex-direction: column; height: 100%;">
+              <div class="card-header">
+                <span class="card-title">What would you like to do?</span>
+              </div>
+              <!-- Use Case Grid -->
+              <div id="use-case-grid" class="use-case-grid">
+                <!-- Buttons will be injected here by JS -->
+              </div>
+          </div>
+
+          <!-- Result Area -->
+          <div id="result-area">
+             <div class="card-header">
+                <span class="card-title" id="result-title">Result</span>
+                <div style="display: flex; gap: 8px;">
+                    <button id="copy-result-btn" class="btn" style="padding: 4px 12px; font-size: 0.8em;">Copy</button>
+                    <button id="back-to-actions" class="btn" style="padding: 4px 12px; font-size: 0.8em;">Back</button>
+                </div>
+             </div>
+             <div id="summary-content">
+                <div id="summary-text"></div>
+                <div id="summary-loader" class="loader"></div>
+                <div id="summary-loading-text" style="display: none; text-align: center; color: var(--text-muted); font-size: 0.9em; margin-top: 10px;">Thinking...</div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Tab -->
+      <div id="tab-chat" class="tab-content">
+        <div id="chat-container">
+          <div id="chat-history">
+            <div class="message ai">
+                <div class="message-avatar">🤖</div>
+                <div class="message-wrapper">
+                    <div class="message-content">Hello! I'm here to help. Ask me anything about this page or just chat!</div>
+                </div>
+            </div>
+          </div>
+          <div class="input-area">
+            <textarea id="user-input" placeholder="Type a message..." rows="1" aria-label="Type a message"></textarea>
+            <button id="send-btn" class="btn">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes Tab -->
+      <div id="tab-notes" class="tab-content">
+        <div id="notes-container">
+            <div id="notes-list">
+                <!-- Notes will be injected here -->
+                <div style="text-align: center; color: var(--text-muted); margin-top: 20px;">
+                    No notes yet. Ask the AI to "take a note" during chat!
+                </div>
+            </div>
+            <div id="notes-controls">
+                <button id="clear-notes-btn" class="btn btn-danger" style="font-size: 0.85em; margin-right: auto;">Clear All</button>
+                <button id="download-doc-btn" class="btn" style="font-size: 0.85em;">Download DOC</button>
+                <button id="download-pdf-btn" class="btn" style="font-size: 0.85em;">Download PDF</button>
+            </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="tab-settings" class="tab-content">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Appearance</span>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">API Key</div>
+            <input type="password" id="api-key-input" class="model-select" placeholder="Enter your Gemini API Key">
+            <div style="margin-top: 5px; font-size: 0.8em; color: var(--text-muted);">
+              Get your key from <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: var(--primary-color);">Google AI Studio</a>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Theme Color</div>
+            <div class="settings-options" id="color-options">
+              <div class="color-option selected" style="background: #6366f1;" data-hue="240"></div> <!-- Indigo -->
+              <div class="color-option" style="background: #0ea5e9;" data-hue="200"></div> <!-- Sky -->
+              <div class="color-option" style="background: #10b981;" data-hue="160"></div> <!-- Emerald -->
+              <div class="color-option" style="background: #f43f5e;" data-hue="340"></div> <!-- Rose -->
+              <div class="color-option" style="background: #8b5cf6;" data-hue="270"></div> <!-- Violet -->
+              <div class="color-option" style="background: #f97316;" data-hue="25"></div>  <!-- Orange -->
+              <div class="color-option" style="background: #eab308;" data-hue="45"></div>  <!-- Yellow -->
+              <div class="color-option" style="background: #14b8a6;" data-hue="170"></div> <!-- Teal -->
+              <div class="color-option" style="background: #64748b;" data-hue="215"></div> <!-- Slate -->
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Display Mode</div>
+            <div class="settings-options" id="mode-options">
+              <button class="mode-btn selected" data-mode="light">Light</button>
+              <button class="mode-btn" data-mode="dark">Dark</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Corner Style</div>
+            <div class="settings-options" id="corner-options">
+              <button class="corner-btn selected" data-corner="rounded">Rounded</button>
+              <button class="corner-btn" data-corner="square">Square</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Window Size</div>
+            <div class="settings-options" id="size-options">
+              <button class="size-btn" data-size="compact">Compact</button>
+              <button class="size-btn selected" data-size="normal">Normal</button>
+              <button class="size-btn" data-size="large">Large</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Typography</div>
+            <div class="settings-options" id="font-family-options" style="margin-bottom: 10px;">
+              <button class="font-family-btn selected" data-font="inter" style="font-family: 'Inter', sans-serif;">Inter</button>
+              <button class="font-family-btn" data-font="serif" style="font-family: 'Georgia', serif;">Serif</button>
+              <button class="font-family-btn" data-font="mono" style="font-family: 'Courier New', monospace;">Mono</button>
+              <button class="font-family-btn" data-font="system" style="font-family: system-ui;">System</button>
+              <button class="font-family-btn" data-font="comic" style="font-family: 'Comic Sans MS', cursive;">Comic</button>
+            </div>
+            <div class="settings-options" id="font-size-options">
+              <button class="font-btn" data-font="small" style="font-size: 12px;">Aa</button>
+              <button class="font-btn selected" data-font="medium" style="font-size: 14px;">Aa</button>
+              <button class="font-btn" data-font="large" style="font-size: 16px;">Aa</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">AI Model</div>
+            <select id="model-select" class="model-select">
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Smart)</option>
+            </select>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Output Language</div>
+            <select id="language-select" class="model-select">
+                <option value="English">English</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <option value="German">German</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Portuguese">Portuguese</option>
+                <option value="Italian">Italian</option>
+                <option value="Russian">Russian</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="src/popup/popup.js"></script>
+</body>
+</html>
